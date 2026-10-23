@@ -9,7 +9,7 @@ Demonstrates managing a large fleet of clusters with Kargo and Argo CD.
 | `inventory/clusters/` | Cluster inventory, one file per cluster, named `<env>.<cloud>.<geo>.<metro>.<3-digit-id>.yaml`, with the cluster's `cloud` and provider `region` as fields |
 | `charts/<addon>/` | A dummy Helm chart per add-on. Each directory here becomes an add-on on every cluster |
 | `setup/cluster-addons/argocd/` | Argo CD AppProject and ApplicationSet: one Application per cluster × add-on |
-| `setup/cluster-addons/kargo/` | Kargo Project, Warehouses (one per add-on), TargetSet (one target per cluster), Stages (`test`, then `<env>.<geo>`) and PromotionTask |
+| `setup/cluster-addons/kargo/` | Kargo Project, Warehouses (one per add-on), TargetSet (one target per cluster), Stages (`test`, `stg.<geo>`, the `prod` gate, `prd.<geo>`) and PromotionTask |
 | `setup/kargo-system/` | Shared Kargo resources (custom promotion steps) |
 
 ## Setup
@@ -62,7 +62,7 @@ kargo get freight --project cluster-addons
 
 ## Promoting an add-on
 
-Each add-on has its own Warehouse, and every Stage requests Freight from all of them. Freight goes to a single `test` Stage (every `tst` cluster), then fans out to `stg.<geo>` → `prd.<geo>` for each geo (`na`, `latam`, `eu`, `apac`, `gov`). Promoting a piece of Freight updates that add-on's Application on every cluster in the Stage.
+Each add-on has its own Warehouse, and every Stage requests Freight from all of them. Freight goes to a single `test` Stage (every `tst` cluster), then fans out to a `stg.<geo>` Stage for each geo (`na`, `latam`, `eu`, `apac`, `gov`). Before production it passes through `prod`, a control-flow Stage with no clusters or promotion steps: Freight only becomes available there once it has been verified in every `stg.<geo>` Stage. From `prod`, it fans out again to the `prd.<geo>` Stages. Promoting a piece of Freight updates that add-on's Application on every cluster in the Stage.
 
 ```sh
 # Promote the latest kyverno Freight to test
@@ -70,6 +70,10 @@ kargo promote --project cluster-addons --warehouse kyverno --stage test
 
 # Then onward to every stg.<geo> Stage
 kargo promote --project cluster-addons --freight-alias <alias> --downstream-from test
+
+# Once it's verified in all of them, through the prod gate and on to every prd.<geo> Stage
+kargo promote --project cluster-addons --freight-alias <alias> --stage prod
+kargo promote --project cluster-addons --freight-alias <alias> --downstream-from prod
 ```
 
 ## Adding a cluster
@@ -123,15 +127,18 @@ An add-on is a chart in `charts/` plus a Warehouse in Kargo, both named after th
      argo-rollouts: quay.io/argoproj/argo-rollouts
    ```
 
-4. **Request its Freight in every Stage** in `setup/cluster-addons/kargo/stages.yaml`. Each Stage lists every add-on's Warehouse under `requestedFreight`. The `test` Stage takes Freight directly from the Warehouse, `stg.<geo>` Stages take it from `test`, and `prd.<geo>` Stages from `stg.<geo>`:
+4. **Request its Freight in every Stage** in `setup/cluster-addons/kargo/stages.yaml`. Each Stage lists every add-on's Warehouse under `requestedFreight`. The `test` Stage takes Freight directly from the Warehouse, `stg.<geo>` Stages take it from `test`, the `prod` gate from all `stg.<geo>` Stages, and `prd.<geo>` Stages from `prod`:
 
    ```yaml
    # test
    - origin: { kind: Warehouse, name: argo-rollouts }
      sources: {direct: true}
-   # stg.<geo> (prd.<geo> uses stages: [stg.<geo>])
+   # stg.<geo> (prd.<geo> uses stages: [prod])
    - origin: { kind: Warehouse, name: argo-rollouts }
      sources: {stages: [test]}
+   # prod
+   - origin: { kind: Warehouse, name: argo-rollouts }
+     sources: {stages: [stg.na, stg.latam, stg.eu, stg.apac, stg.gov], availabilityStrategy: All}
    ```
 
 5. **Apply and push:**

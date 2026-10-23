@@ -26,6 +26,7 @@ spec:
         env: tst
     updateStrategy:
       maxConcurrent: 5
+      maxFailures: "5%"
   promotionTemplate:
     spec:
       steps:
@@ -60,6 +61,7 @@ spec:
         geo: na
     updateStrategy:
       maxConcurrent: 10
+      maxFailures: "5%"
   promotionTemplate:
     spec:
       steps:
@@ -94,6 +96,7 @@ spec:
         geo: latam
     updateStrategy:
       maxConcurrent: 10
+      maxFailures: "5%"
   promotionTemplate:
     spec:
       steps:
@@ -128,6 +131,7 @@ spec:
         geo: eu
     updateStrategy:
       maxConcurrent: 10
+      maxFailures: "5%"
   promotionTemplate:
     spec:
       steps:
@@ -162,6 +166,7 @@ spec:
         geo: apac
     updateStrategy:
       maxConcurrent: 10
+      maxFailures: "5%"
   promotionTemplate:
     spec:
       steps:
@@ -196,11 +201,36 @@ spec:
         geo: gov
     updateStrategy:
       maxConcurrent: 10
+      maxFailures: "5%"
   promotionTemplate:
     spec:
       steps:
       - task:
           name: promote
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: prod
+  namespace: cluster-addons
+  annotations:
+    kargo.akuity.io/color: orange
+# Control-flow Stage: no targets or promotion steps. Freight becomes available here once it's been
+# verified in every stg.<geo> Stage, and all prd.<geo> Stages take their Freight from here.
+spec:
+  requestedFreight:
+  - origin: { kind: Warehouse, name: external-dns }
+    sources: {stages: [stg.na, stg.latam, stg.eu, stg.apac, stg.gov], availabilityStrategy: All}
+  - origin: { kind: Warehouse, name: coredns }
+    sources: {stages: [stg.na, stg.latam, stg.eu, stg.apac, stg.gov], availabilityStrategy: All}
+  - origin: { kind: Warehouse, name: cert-manager }
+    sources: {stages: [stg.na, stg.latam, stg.eu, stg.apac, stg.gov], availabilityStrategy: All}
+  - origin: { kind: Warehouse, name: kyverno }
+    sources: {stages: [stg.na, stg.latam, stg.eu, stg.apac, stg.gov], availabilityStrategy: All}
+  - origin: { kind: Warehouse, name: traefik }
+    sources: {stages: [stg.na, stg.latam, stg.eu, stg.apac, stg.gov], availabilityStrategy: All}
+  - origin: { kind: Warehouse, name: prometheus }
+    sources: {stages: [stg.na, stg.latam, stg.eu, stg.apac, stg.gov], availabilityStrategy: All}
 ---
 apiVersion: kargo.akuity.io/v1alpha1
 kind: Stage
@@ -212,17 +242,17 @@ metadata:
 spec:
   requestedFreight:
   - origin: { kind: Warehouse, name: external-dns }
-    sources: {stages: [stg.na]}
+    sources: {stages: [prod]}
   - origin: { kind: Warehouse, name: coredns }
-    sources: {stages: [stg.na]}
+    sources: {stages: [prod]}
   - origin: { kind: Warehouse, name: cert-manager }
-    sources: {stages: [stg.na]}
+    sources: {stages: [prod]}
   - origin: { kind: Warehouse, name: kyverno }
-    sources: {stages: [stg.na]}
+    sources: {stages: [prod]}
   - origin: { kind: Warehouse, name: traefik }
-    sources: {stages: [stg.na]}
+    sources: {stages: [prod]}
   - origin: { kind: Warehouse, name: prometheus }
-    sources: {stages: [stg.na]}
+    sources: {stages: [prod]}
   targets:
     selectors:
     - matchLabels:
@@ -230,6 +260,7 @@ spec:
         geo: na
     updateStrategy:
       maxConcurrent: 20
+      maxFailures: "5%"
   promotionTemplate:
     spec:
       steps:
@@ -246,17 +277,17 @@ metadata:
 spec:
   requestedFreight:
   - origin: { kind: Warehouse, name: external-dns }
-    sources: {stages: [stg.latam]}
+    sources: {stages: [prod]}
   - origin: { kind: Warehouse, name: coredns }
-    sources: {stages: [stg.latam]}
+    sources: {stages: [prod]}
   - origin: { kind: Warehouse, name: cert-manager }
-    sources: {stages: [stg.latam]}
+    sources: {stages: [prod]}
   - origin: { kind: Warehouse, name: kyverno }
-    sources: {stages: [stg.latam]}
+    sources: {stages: [prod]}
   - origin: { kind: Warehouse, name: traefik }
-    sources: {stages: [stg.latam]}
+    sources: {stages: [prod]}
   - origin: { kind: Warehouse, name: prometheus }
-    sources: {stages: [stg.latam]}
+    sources: {stages: [prod]}
   targets:
     selectors:
     - matchLabels:
@@ -264,6 +295,7 @@ spec:
         geo: latam
     updateStrategy:
       maxConcurrent: 20
+      maxFailures: "5%"
   promotionTemplate:
     spec:
       steps:
@@ -280,17 +312,17 @@ metadata:
 spec:
   requestedFreight:
   - origin: { kind: Warehouse, name: external-dns }
-    sources: {stages: [stg.eu]}
+    sources: {stages: [prod]}
   - origin: { kind: Warehouse, name: coredns }
-    sources: {stages: [stg.eu]}
+    sources: {stages: [prod]}
   - origin: { kind: Warehouse, name: cert-manager }
-    sources: {stages: [stg.eu]}
+    sources: {stages: [prod]}
   - origin: { kind: Warehouse, name: kyverno }
-    sources: {stages: [stg.eu]}
+    sources: {stages: [prod]}
   - origin: { kind: Warehouse, name: traefik }
-    sources: {stages: [stg.eu]}
+    sources: {stages: [prod]}
   - origin: { kind: Warehouse, name: prometheus }
-    sources: {stages: [stg.eu]}
+    sources: {stages: [prod]}
   targets:
     selectors:
     - matchLabels:
@@ -298,6 +330,7 @@ spec:
         geo: eu
     updateStrategy:
       maxConcurrent: 20
+      maxFailures: "5%"
   promotionTemplate:
     spec:
       steps:
@@ -314,17 +347,17 @@ metadata:
 spec:
   requestedFreight:
   - origin: { kind: Warehouse, name: external-dns }
-    sources: {stages: [stg.apac]}
+    sources: {stages: [prod]}
   - origin: { kind: Warehouse, name: coredns }
-    sources: {stages: [stg.apac]}
+    sources: {stages: [prod]}
   - origin: { kind: Warehouse, name: cert-manager }
-    sources: {stages: [stg.apac]}
+    sources: {stages: [prod]}
   - origin: { kind: Warehouse, name: kyverno }
-    sources: {stages: [stg.apac]}
+    sources: {stages: [prod]}
   - origin: { kind: Warehouse, name: traefik }
-    sources: {stages: [stg.apac]}
+    sources: {stages: [prod]}
   - origin: { kind: Warehouse, name: prometheus }
-    sources: {stages: [stg.apac]}
+    sources: {stages: [prod]}
   targets:
     selectors:
     - matchLabels:
@@ -332,6 +365,7 @@ spec:
         geo: apac
     updateStrategy:
       maxConcurrent: 20
+      maxFailures: "5%"
   promotionTemplate:
     spec:
       steps:
@@ -348,17 +382,17 @@ metadata:
 spec:
   requestedFreight:
   - origin: { kind: Warehouse, name: external-dns }
-    sources: {stages: [stg.gov]}
+    sources: {stages: [prod]}
   - origin: { kind: Warehouse, name: coredns }
-    sources: {stages: [stg.gov]}
+    sources: {stages: [prod]}
   - origin: { kind: Warehouse, name: cert-manager }
-    sources: {stages: [stg.gov]}
+    sources: {stages: [prod]}
   - origin: { kind: Warehouse, name: kyverno }
-    sources: {stages: [stg.gov]}
+    sources: {stages: [prod]}
   - origin: { kind: Warehouse, name: traefik }
-    sources: {stages: [stg.gov]}
+    sources: {stages: [prod]}
   - origin: { kind: Warehouse, name: prometheus }
-    sources: {stages: [stg.gov]}
+    sources: {stages: [prod]}
   targets:
     selectors:
     - matchLabels:
@@ -366,6 +400,7 @@ spec:
         geo: gov
     updateStrategy:
       maxConcurrent: 20
+      maxFailures: "5%"
   promotionTemplate:
     spec:
       steps:

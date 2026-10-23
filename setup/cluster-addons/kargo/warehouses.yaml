@@ -24,6 +24,9 @@ spec:
   - image:
       repoURL: registry.k8s.io/external-dns/external-dns
       imageSelectionStrategy: SemVer
+      # Releases only
+      allowTagsRegexes:
+      - ^v\d+\.\d+\.\d+$
       discoveryLimit: 10
 
 ---
@@ -37,6 +40,9 @@ spec:
   - image:
       repoURL: registry.k8s.io/coredns/coredns
       imageSelectionStrategy: SemVer
+      # Releases only
+      allowTagsRegexes:
+      - ^v\d+\.\d+\.\d+$
       discoveryLimit: 10
 
 ---
@@ -50,6 +56,9 @@ spec:
   - image:
       repoURL: quay.io/jetstack/cert-manager-controller
       imageSelectionStrategy: SemVer
+      # Releases only, no pre-releases (v1.21.0-alpha.0, v1.21.0-beta.0)
+      allowTagsRegexes:
+      - ^v\d+\.\d+\.\d+$
       discoveryLimit: 10
 
 ---
@@ -63,6 +72,9 @@ spec:
   - image:
       repoURL: ghcr.io/kyverno/kyverno
       imageSelectionStrategy: SemVer
+      # Releases only, no release candidates (v1.19.2-rc.5)
+      allowTagsRegexes:
+      - ^v\d+\.\d+\.\d+$
       discoveryLimit: 10
 
 ---
@@ -76,6 +88,10 @@ spec:
   - image:
       repoURL: docker.io/library/traefik
       imageSelectionStrategy: SemVer
+      # Releases only: no Windows variants (v3.7.16-nanoserver-ltsc2022), and only the v-prefixed
+      # tags, since each release is also tagged without the v
+      allowTagsRegexes:
+      - ^v\d+\.\d+\.\d+$
       discoveryLimit: 10
 
 ---
@@ -89,4 +105,8 @@ spec:
   - image:
       repoURL: quay.io/prometheus/prometheus
       imageSelectionStrategy: SemVer
+      # Releases only: no release candidates (v3.15.0-rc.1) or image variants (v3.15.0-busybox,
+      # v3.15.0-distroless)
+      allowTagsRegexes:
+      - ^v\d+\.\d+\.\d+$
       discoveryLimit: 10
