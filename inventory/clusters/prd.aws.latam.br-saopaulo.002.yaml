@@ -1,0 +1,3 @@
+cluster: prd.aws.latam.br-saopaulo.002
+cloud: aws
+region: sa-east-1

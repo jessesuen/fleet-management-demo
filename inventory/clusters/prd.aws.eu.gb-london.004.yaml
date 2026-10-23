@@ -1,0 +1,3 @@
+cluster: prd.aws.eu.gb-london.004
+cloud: aws
+region: eu-west-2

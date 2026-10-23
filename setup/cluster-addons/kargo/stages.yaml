@@ -8,36 +8,18 @@ metadata:
     kargo.akuity.io/color: green
 spec:
   requestedFreight:
-  - origin:
-      kind: Warehouse
-      name: external-dns
-    sources:
-      direct: true
-  - origin:
-      kind: Warehouse
-      name: coredns
-    sources:
-      direct: true
-  - origin:
-      kind: Warehouse
-      name: cert-manager
-    sources:
-      direct: true
-  - origin:
-      kind: Warehouse
-      name: kyverno
-    sources:
-      direct: true
-  - origin:
-      kind: Warehouse
-      name: traefik
-    sources:
-      direct: true
-  - origin:
-      kind: Warehouse
-      name: prometheus
-    sources:
-      direct: true
+  - origin: { kind: Warehouse, name: external-dns }
+    sources: {direct: true}
+  - origin: { kind: Warehouse, name: coredns }
+    sources: {direct: true}
+  - origin: { kind: Warehouse, name: cert-manager }
+    sources: {direct: true}
+  - origin: { kind: Warehouse, name: kyverno }
+    sources: {direct: true}
+  - origin: { kind: Warehouse, name: traefik }
+    sources: {direct: true}
+  - origin: { kind: Warehouse, name: prometheus }
+    sources: {direct: true}
   targets:
     selectors:
     - matchLabels:
@@ -59,42 +41,18 @@ metadata:
     kargo.akuity.io/color: yellow
 spec:
   requestedFreight:
-  - origin:
-      kind: Warehouse
-      name: external-dns
-    sources:
-      stages:
-      - test
-  - origin:
-      kind: Warehouse
-      name: coredns
-    sources:
-      stages:
-      - test
-  - origin:
-      kind: Warehouse
-      name: cert-manager
-    sources:
-      stages:
-      - test
-  - origin:
-      kind: Warehouse
-      name: kyverno
-    sources:
-      stages:
-      - test
-  - origin:
-      kind: Warehouse
-      name: traefik
-    sources:
-      stages:
-      - test
-  - origin:
-      kind: Warehouse
-      name: prometheus
-    sources:
-      stages:
-      - test
+  - origin: { kind: Warehouse, name: external-dns }
+    sources: {stages: [test]}
+  - origin: { kind: Warehouse, name: coredns }
+    sources: {stages: [test]}
+  - origin: { kind: Warehouse, name: cert-manager }
+    sources: {stages: [test]}
+  - origin: { kind: Warehouse, name: kyverno }
+    sources: {stages: [test]}
+  - origin: { kind: Warehouse, name: traefik }
+    sources: {stages: [test]}
+  - origin: { kind: Warehouse, name: prometheus }
+    sources: {stages: [test]}
   targets:
     selectors:
     - matchLabels:
@@ -117,42 +75,18 @@ metadata:
     kargo.akuity.io/color: yellow
 spec:
   requestedFreight:
-  - origin:
-      kind: Warehouse
-      name: external-dns
-    sources:
-      stages:
-      - test
-  - origin:
-      kind: Warehouse
-      name: coredns
-    sources:
-      stages:
-      - test
-  - origin:
-      kind: Warehouse
-      name: cert-manager
-    sources:
-      stages:
-      - test
-  - origin:
-      kind: Warehouse
-      name: kyverno
-    sources:
-      stages:
-      - test
-  - origin:
-      kind: Warehouse
-      name: traefik
-    sources:
-      stages:
-      - test
-  - origin:
-      kind: Warehouse
-      name: prometheus
-    sources:
-      stages:
-      - test
+  - origin: { kind: Warehouse, name: external-dns }
+    sources: {stages: [test]}
+  - origin: { kind: Warehouse, name: coredns }
+    sources: {stages: [test]}
+  - origin: { kind: Warehouse, name: cert-manager }
+    sources: {stages: [test]}
+  - origin: { kind: Warehouse, name: kyverno }
+    sources: {stages: [test]}
+  - origin: { kind: Warehouse, name: traefik }
+    sources: {stages: [test]}
+  - origin: { kind: Warehouse, name: prometheus }
+    sources: {stages: [test]}
   targets:
     selectors:
     - matchLabels:
@@ -175,42 +109,18 @@ metadata:
     kargo.akuity.io/color: yellow
 spec:
   requestedFreight:
-  - origin:
-      kind: Warehouse
-      name: external-dns
-    sources:
-      stages:
-      - test
-  - origin:
-      kind: Warehouse
-      name: coredns
-    sources:
-      stages:
-      - test
-  - origin:
-      kind: Warehouse
-      name: cert-manager
-    sources:
-      stages:
-      - test
-  - origin:
-      kind: Warehouse
-      name: kyverno
-    sources:
-      stages:
-      - test
-  - origin:
-      kind: Warehouse
-      name: traefik
-    sources:
-      stages:
-      - test
-  - origin:
-      kind: Warehouse
-      name: prometheus
-    sources:
-      stages:
-      - test
+  - origin: { kind: Warehouse, name: external-dns }
+    sources: {stages: [test]}
+  - origin: { kind: Warehouse, name: coredns }
+    sources: {stages: [test]}
+  - origin: { kind: Warehouse, name: cert-manager }
+    sources: {stages: [test]}
+  - origin: { kind: Warehouse, name: kyverno }
+    sources: {stages: [test]}
+  - origin: { kind: Warehouse, name: traefik }
+    sources: {stages: [test]}
+  - origin: { kind: Warehouse, name: prometheus }
+    sources: {stages: [test]}
   targets:
     selectors:
     - matchLabels:
@@ -233,42 +143,18 @@ metadata:
     kargo.akuity.io/color: yellow
 spec:
   requestedFreight:
-  - origin:
-      kind: Warehouse
-      name: external-dns
-    sources:
-      stages:
-      - test
-  - origin:
-      kind: Warehouse
-      name: coredns
-    sources:
-      stages:
-      - test
-  - origin:
-      kind: Warehouse
-      name: cert-manager
-    sources:
-      stages:
-      - test
-  - origin:
-      kind: Warehouse
-      name: kyverno
-    sources:
-      stages:
-      - test
-  - origin:
-      kind: Warehouse
-      name: traefik
-    sources:
-      stages:
-      - test
-  - origin:
-      kind: Warehouse
-      name: prometheus
-    sources:
-      stages:
-      - test
+  - origin: { kind: Warehouse, name: external-dns }
+    sources: {stages: [test]}
+  - origin: { kind: Warehouse, name: coredns }
+    sources: {stages: [test]}
+  - origin: { kind: Warehouse, name: cert-manager }
+    sources: {stages: [test]}
+  - origin: { kind: Warehouse, name: kyverno }
+    sources: {stages: [test]}
+  - origin: { kind: Warehouse, name: traefik }
+    sources: {stages: [test]}
+  - origin: { kind: Warehouse, name: prometheus }
+    sources: {stages: [test]}
   targets:
     selectors:
     - matchLabels:
@@ -291,42 +177,18 @@ metadata:
     kargo.akuity.io/color: yellow
 spec:
   requestedFreight:
-  - origin:
-      kind: Warehouse
-      name: external-dns
-    sources:
-      stages:
-      - test
-  - origin:
-      kind: Warehouse
-      name: coredns
-    sources:
-      stages:
-      - test
-  - origin:
-      kind: Warehouse
-      name: cert-manager
-    sources:
-      stages:
-      - test
-  - origin:
-      kind: Warehouse
-      name: kyverno
-    sources:
-      stages:
-      - test
-  - origin:
-      kind: Warehouse
-      name: traefik
-    sources:
-      stages:
-      - test
-  - origin:
-      kind: Warehouse
-      name: prometheus
-    sources:
-      stages:
-      - test
+  - origin: { kind: Warehouse, name: external-dns }
+    sources: {stages: [test]}
+  - origin: { kind: Warehouse, name: coredns }
+    sources: {stages: [test]}
+  - origin: { kind: Warehouse, name: cert-manager }
+    sources: {stages: [test]}
+  - origin: { kind: Warehouse, name: kyverno }
+    sources: {stages: [test]}
+  - origin: { kind: Warehouse, name: traefik }
+    sources: {stages: [test]}
+  - origin: { kind: Warehouse, name: prometheus }
+    sources: {stages: [test]}
   targets:
     selectors:
     - matchLabels:
@@ -349,42 +211,18 @@ metadata:
     kargo.akuity.io/color: red
 spec:
   requestedFreight:
-  - origin:
-      kind: Warehouse
-      name: external-dns
-    sources:
-      stages:
-      - stg.na
-  - origin:
-      kind: Warehouse
-      name: coredns
-    sources:
-      stages:
-      - stg.na
-  - origin:
-      kind: Warehouse
-      name: cert-manager
-    sources:
-      stages:
-      - stg.na
-  - origin:
-      kind: Warehouse
-      name: kyverno
-    sources:
-      stages:
-      - stg.na
-  - origin:
-      kind: Warehouse
-      name: traefik
-    sources:
-      stages:
-      - stg.na
-  - origin:
-      kind: Warehouse
-      name: prometheus
-    sources:
-      stages:
-      - stg.na
+  - origin: { kind: Warehouse, name: external-dns }
+    sources: {stages: [stg.na]}
+  - origin: { kind: Warehouse, name: coredns }
+    sources: {stages: [stg.na]}
+  - origin: { kind: Warehouse, name: cert-manager }
+    sources: {stages: [stg.na]}
+  - origin: { kind: Warehouse, name: kyverno }
+    sources: {stages: [stg.na]}
+  - origin: { kind: Warehouse, name: traefik }
+    sources: {stages: [stg.na]}
+  - origin: { kind: Warehouse, name: prometheus }
+    sources: {stages: [stg.na]}
   targets:
     selectors:
     - matchLabels:
@@ -407,42 +245,18 @@ metadata:
     kargo.akuity.io/color: red
 spec:
   requestedFreight:
-  - origin:
-      kind: Warehouse
-      name: external-dns
-    sources:
-      stages:
-      - stg.latam
-  - origin:
-      kind: Warehouse
-      name: coredns
-    sources:
-      stages:
-      - stg.latam
-  - origin:
-      kind: Warehouse
-      name: cert-manager
-    sources:
-      stages:
-      - stg.latam
-  - origin:
-      kind: Warehouse
-      name: kyverno
-    sources:
-      stages:
-      - stg.latam
-  - origin:
-      kind: Warehouse
-      name: traefik
-    sources:
-      stages:
-      - stg.latam
-  - origin:
-      kind: Warehouse
-      name: prometheus
-    sources:
-      stages:
-      - stg.latam
+  - origin: { kind: Warehouse, name: external-dns }
+    sources: {stages: [stg.latam]}
+  - origin: { kind: Warehouse, name: coredns }
+    sources: {stages: [stg.latam]}
+  - origin: { kind: Warehouse, name: cert-manager }
+    sources: {stages: [stg.latam]}
+  - origin: { kind: Warehouse, name: kyverno }
+    sources: {stages: [stg.latam]}
+  - origin: { kind: Warehouse, name: traefik }
+    sources: {stages: [stg.latam]}
+  - origin: { kind: Warehouse, name: prometheus }
+    sources: {stages: [stg.latam]}
   targets:
     selectors:
     - matchLabels:
@@ -465,42 +279,18 @@ metadata:
     kargo.akuity.io/color: red
 spec:
   requestedFreight:
-  - origin:
-      kind: Warehouse
-      name: external-dns
-    sources:
-      stages:
-      - stg.eu
-  - origin:
-      kind: Warehouse
-      name: coredns
-    sources:
-      stages:
-      - stg.eu
-  - origin:
-      kind: Warehouse
-      name: cert-manager
-    sources:
-      stages:
-      - stg.eu
-  - origin:
-      kind: Warehouse
-      name: kyverno
-    sources:
-      stages:
-      - stg.eu
-  - origin:
-      kind: Warehouse
-      name: traefik
-    sources:
-      stages:
-      - stg.eu
-  - origin:
-      kind: Warehouse
-      name: prometheus
-    sources:
-      stages:
-      - stg.eu
+  - origin: { kind: Warehouse, name: external-dns }
+    sources: {stages: [stg.eu]}
+  - origin: { kind: Warehouse, name: coredns }
+    sources: {stages: [stg.eu]}
+  - origin: { kind: Warehouse, name: cert-manager }
+    sources: {stages: [stg.eu]}
+  - origin: { kind: Warehouse, name: kyverno }
+    sources: {stages: [stg.eu]}
+  - origin: { kind: Warehouse, name: traefik }
+    sources: {stages: [stg.eu]}
+  - origin: { kind: Warehouse, name: prometheus }
+    sources: {stages: [stg.eu]}
   targets:
     selectors:
     - matchLabels:
@@ -523,42 +313,18 @@ metadata:
     kargo.akuity.io/color: red
 spec:
   requestedFreight:
-  - origin:
-      kind: Warehouse
-      name: external-dns
-    sources:
-      stages:
-      - stg.apac
-  - origin:
-      kind: Warehouse
-      name: coredns
-    sources:
-      stages:
-      - stg.apac
-  - origin:
-      kind: Warehouse
-      name: cert-manager
-    sources:
-      stages:
-      - stg.apac
-  - origin:
-      kind: Warehouse
-      name: kyverno
-    sources:
-      stages:
-      - stg.apac
-  - origin:
-      kind: Warehouse
-      name: traefik
-    sources:
-      stages:
-      - stg.apac
-  - origin:
-      kind: Warehouse
-      name: prometheus
-    sources:
-      stages:
-      - stg.apac
+  - origin: { kind: Warehouse, name: external-dns }
+    sources: {stages: [stg.apac]}
+  - origin: { kind: Warehouse, name: coredns }
+    sources: {stages: [stg.apac]}
+  - origin: { kind: Warehouse, name: cert-manager }
+    sources: {stages: [stg.apac]}
+  - origin: { kind: Warehouse, name: kyverno }
+    sources: {stages: [stg.apac]}
+  - origin: { kind: Warehouse, name: traefik }
+    sources: {stages: [stg.apac]}
+  - origin: { kind: Warehouse, name: prometheus }
+    sources: {stages: [stg.apac]}
   targets:
     selectors:
     - matchLabels:
@@ -581,42 +347,18 @@ metadata:
     kargo.akuity.io/color: red
 spec:
   requestedFreight:
-  - origin:
-      kind: Warehouse
-      name: external-dns
-    sources:
-      stages:
-      - stg.gov
-  - origin:
-      kind: Warehouse
-      name: coredns
-    sources:
-      stages:
-      - stg.gov
-  - origin:
-      kind: Warehouse
-      name: cert-manager
-    sources:
-      stages:
-      - stg.gov
-  - origin:
-      kind: Warehouse
-      name: kyverno
-    sources:
-      stages:
-      - stg.gov
-  - origin:
-      kind: Warehouse
-      name: traefik
-    sources:
-      stages:
-      - stg.gov
-  - origin:
-      kind: Warehouse
-      name: prometheus
-    sources:
-      stages:
-      - stg.gov
+  - origin: { kind: Warehouse, name: external-dns }
+    sources: {stages: [stg.gov]}
+  - origin: { kind: Warehouse, name: coredns }
+    sources: {stages: [stg.gov]}
+  - origin: { kind: Warehouse, name: cert-manager }
+    sources: {stages: [stg.gov]}
+  - origin: { kind: Warehouse, name: kyverno }
+    sources: {stages: [stg.gov]}
+  - origin: { kind: Warehouse, name: traefik }
+    sources: {stages: [stg.gov]}
+  - origin: { kind: Warehouse, name: prometheus }
+    sources: {stages: [stg.gov]}
   targets:
     selectors:
     - matchLabels:

@@ -1,0 +1,3 @@
+cluster: stg.aws.latam.br-saopaulo.005
+cloud: aws
+region: sa-east-1

@@ -1,0 +1,3 @@
+cluster: prd.aws.gov.us-ohio.005
+cloud: aws
+region: us-gov-east-1

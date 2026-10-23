@@ -1,0 +1,3 @@
+cluster: prd.gcp.na.us-iowa.010
+cloud: gcp
+region: us-central1

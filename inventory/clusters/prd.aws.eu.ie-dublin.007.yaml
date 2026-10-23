@@ -1,0 +1,3 @@
+cluster: prd.aws.eu.ie-dublin.007
+cloud: aws
+region: eu-west-1

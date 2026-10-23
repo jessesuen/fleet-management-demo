@@ -6,7 +6,7 @@ Demonstrates managing a large fleet of clusters with Kargo and Argo CD.
 
 | Path | Contents |
 |---|---|
-| `inventory/clusters/` | Cluster inventory, one file per cluster, named `<env>.<geo>.<cloud>.<region>.<3-digit-id>.yaml` |
+| `inventory/clusters/` | Cluster inventory, one file per cluster, named `<env>.<cloud>.<geo>.<metro>.<3-digit-id>.yaml`, with the cluster's `cloud` and provider `region` as fields |
 | `charts/<addon>/` | A dummy Helm chart per add-on. Each directory here becomes an add-on on every cluster |
 | `setup/cluster-addons/argocd/` | Argo CD AppProject and ApplicationSet: one Application per cluster × add-on |
 | `setup/cluster-addons/kargo/` | Kargo Project, Warehouses (one per add-on), TargetSet (one target per cluster), Stages (`test`, then `<env>.<geo>`) and PromotionTask |
@@ -74,13 +74,17 @@ kargo promote --project cluster-addons --freight-alias <alias> --downstream-from
 
 ## Adding a cluster
 
-Add a file to `inventory/clusters/` and push:
+Add a file to `inventory/clusters/` and push. The name is `<env>.<cloud>.<geo>.<metro>.<3-digit-id>`, where the metro is `<country>-<city>` of the provider region (e.g. AWS `eu-west-1`, Azure `northeurope` → `ie-dublin`). The 3-digit ID counts clusters per env, cloud, geo and metro, since one cloud can have several regions in a metro:
 
 ```sh
-echo 'cluster: prd.eu.aws.eu-west-1.013' > inventory/clusters/prd.eu.aws.eu-west-1.013.yaml
+cat > inventory/clusters/prd.aws.eu.ie-dublin.099.yaml <<EOF
+cluster: prd.aws.eu.ie-dublin.099
+cloud: aws
+region: eu-west-1
+EOF
 ```
 
-The ApplicationSet creates an Application for each add-on in `charts/`, and the TargetSet adds it as a target of the matching `<env>.<geo>` Stage.
+The ApplicationSet creates an Application for each add-on in `charts/`, and the TargetSet adds it as a target of the matching Stage: `test` for `tst` clusters, otherwise `<env>.<geo>`.
 
 ## Adding an add-on
 
@@ -123,18 +127,11 @@ An add-on is a chart in `charts/` plus a Warehouse in Kargo, both named after th
 
    ```yaml
    # test
-   - origin:
-       kind: Warehouse
-       name: argo-rollouts
-     sources:
-       direct: true
-   # stg.<geo> and prd.<geo>
-   - origin:
-       kind: Warehouse
-       name: argo-rollouts
-     sources:
-       stages:
-       - test   # or stg.<geo> for prd.<geo>
+   - origin: { kind: Warehouse, name: argo-rollouts }
+     sources: {direct: true}
+   # stg.<geo> (prd.<geo> uses stages: [stg.<geo>])
+   - origin: { kind: Warehouse, name: argo-rollouts }
+     sources: {stages: [test]}
    ```
 
 5. **Apply and push:**

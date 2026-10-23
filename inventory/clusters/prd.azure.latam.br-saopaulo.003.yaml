@@ -1,0 +1,3 @@
+cluster: prd.azure.latam.br-saopaulo.003
+cloud: azure
+region: brazilsouth

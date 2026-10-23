@@ -1,0 +1,3 @@
+cluster: prd.aws.eu.de-frankfurt.007
+cloud: aws
+region: eu-central-1

@@ -1,0 +1,3 @@
+cluster: prd.aws.latam.mx-queretaro.002
+cloud: aws
+region: mx-central-1

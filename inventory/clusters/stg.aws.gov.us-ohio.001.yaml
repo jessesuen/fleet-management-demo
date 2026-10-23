@@ -1,0 +1,3 @@
+cluster: stg.aws.gov.us-ohio.001
+cloud: aws
+region: us-gov-east-1

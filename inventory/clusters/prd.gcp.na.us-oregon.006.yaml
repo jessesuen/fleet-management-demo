@@ -1,0 +1,3 @@
+cluster: prd.gcp.na.us-oregon.006
+cloud: gcp
+region: us-west1

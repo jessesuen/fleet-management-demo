@@ -1,0 +1,3 @@
+cluster: tst.aws.latam.br-saopaulo.001
+cloud: aws
+region: sa-east-1

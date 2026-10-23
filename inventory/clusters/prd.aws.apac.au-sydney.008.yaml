@@ -1,0 +1,3 @@
+cluster: prd.aws.apac.au-sydney.008
+cloud: aws
+region: ap-southeast-2

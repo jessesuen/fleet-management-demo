@@ -1,0 +1,3 @@
+cluster: stg.aws.eu.gb-london.001
+cloud: aws
+region: eu-west-2

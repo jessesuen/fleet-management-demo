@@ -1,0 +1,3 @@
+cluster: prd.aws.na.us-oregon.003
+cloud: aws
+region: us-west-2

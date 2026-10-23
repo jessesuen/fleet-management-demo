@@ -13,7 +13,8 @@ spec:
   generators:
   - matrix:
       generators:
-      # Clusters, one inventory file per cluster (named <env>.<geo>.<cloud>.<region>.<3-digit-id>)
+      # Clusters, one inventory file per cluster (named <env>.<cloud>.<geo>.<metro>.<3-digit-id>),
+      # with the cluster's cloud and region as fields
       - git:
           repoURL: https://github.com/jessesuen/fleet-management-demo.git
           revision: HEAD
@@ -34,12 +35,15 @@ spec:
         appset: cluster-addons
         addon: '{{ .chart.path.basename }}'
         env: '{{ index (splitList "." .cluster) 0 }}'
-        geo: '{{ index (splitList "." .cluster) 1 }}'
-        cloud: '{{ index (splitList "." .cluster) 2 }}'
-        region: '{{ index (splitList "." .cluster) 3 }}'
+        geo: '{{ index (splitList "." .cluster) 2 }}'
+        metro: '{{ index (splitList "." .cluster) 3 }}'
+        # Country code prefix of the metro (<country>-<city>)
+        country: '{{ index (splitList "-" (index (splitList "." .cluster) 3)) 0 }}'
+        cloud: '{{ .cloud }}'
+        region: '{{ .region }}'
       annotations:
         # tst clusters all belong to the single test Stage; the others to <env>.<geo>
-        kargo.akuity.io/authorized-stage: 'cluster-addons:{{ if hasPrefix "tst." .cluster }}test{{ else }}{{ index (splitList "." .cluster) 0 }}.{{ index (splitList "." .cluster) 1 }}{{ end }}'
+        kargo.akuity.io/authorized-stage: 'cluster-addons:{{ if hasPrefix "tst." .cluster }}test{{ else }}{{ index (splitList "." .cluster) 0 }}.{{ index (splitList "." .cluster) 2 }}{{ end }}'
     spec:
       project: cluster-addons
       source:
@@ -55,9 +59,11 @@ spec:
               CLUSTER: '{{ .cluster }}'
               ADDON: '{{ .chart.path.basename }}'
               ENV: '{{ index (splitList "." .cluster) 0 }}'
-              GEO: '{{ index (splitList "." .cluster) 1 }}'
-              CLOUD: '{{ index (splitList "." .cluster) 2 }}'
-              REGION: '{{ index (splitList "." .cluster) 3 }}'
+              GEO: '{{ index (splitList "." .cluster) 2 }}'
+              METRO: '{{ index (splitList "." .cluster) 3 }}'
+              COUNTRY: '{{ index (splitList "-" (index (splitList "." .cluster) 3)) 0 }}'
+              CLOUD: '{{ .cloud }}'
+              REGION: '{{ .region }}'
       destination:
         name: demo
         namespace: cluster-addons

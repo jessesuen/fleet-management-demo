@@ -1,0 +1,3 @@
+cluster: prd.gcp.apac.jp-tokyo.001
+cloud: gcp
+region: asia-northeast1

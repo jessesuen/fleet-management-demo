@@ -1,0 +1,3 @@
+cluster: prd.aws.na.ca-montreal.001
+cloud: aws
+region: ca-central-1

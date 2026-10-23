@@ -1,0 +1,3 @@
+cluster: prd.gcp.na.us-virginia.008
+cloud: gcp
+region: us-east4

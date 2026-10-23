@@ -1,0 +1,3 @@
+cluster: prd.aws.apac.jp-tokyo.010
+cloud: aws
+region: ap-northeast-1

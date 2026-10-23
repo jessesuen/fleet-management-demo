@@ -1,0 +1,3 @@
+cluster: prd.gcp.eu.de-frankfurt.001
+cloud: gcp
+region: europe-west3

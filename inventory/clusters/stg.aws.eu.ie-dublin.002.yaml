@@ -1,0 +1,3 @@
+cluster: stg.aws.eu.ie-dublin.002
+cloud: aws
+region: eu-west-1

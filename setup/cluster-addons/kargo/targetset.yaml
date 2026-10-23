@@ -4,7 +4,9 @@ metadata:
   name: cluster-addons
   namespace: cluster-addons
 spec:
-  # One target per cluster, from the same inventory as the ApplicationSet
+  # One target per cluster, from the same inventory as the ApplicationSet. env, geo, metro and
+  # country (the metro's <country>- prefix) come from the cluster name
+  # (<env>.<cloud>.<geo>.<metro>.<3-digit-id>); cloud and region from its file.
   generator:
     git:
       repoURL: https://github.com/jessesuen/fleet-management-demo.git
@@ -16,13 +18,17 @@ spec:
       name: '${{resource.cluster}}'
       labels:
         env: '${{split(resource.cluster, ".")[0]}}'
-        geo: '${{split(resource.cluster, ".")[1]}}'
-        cloud: '${{split(resource.cluster, ".")[2]}}'
-        region: '${{split(resource.cluster, ".")[3]}}'
+        geo: '${{split(resource.cluster, ".")[2]}}'
+        metro: '${{split(resource.cluster, ".")[3]}}'
+        country: '${{split(split(resource.cluster, ".")[3], "-")[0]}}'
+        cloud: '${{resource.cloud}}'
+        region: '${{resource.region}}'
     spec:
       params:
         cluster: '${{resource.cluster}}'
         env: '${{split(resource.cluster, ".")[0]}}'
-        geo: '${{split(resource.cluster, ".")[1]}}'
-        cloud: '${{split(resource.cluster, ".")[2]}}'
-        region: '${{split(resource.cluster, ".")[3]}}'
+        geo: '${{split(resource.cluster, ".")[2]}}'
+        metro: '${{split(resource.cluster, ".")[3]}}'
+        country: '${{split(split(resource.cluster, ".")[3], "-")[0]}}'
+        cloud: '${{resource.cloud}}'
+        region: '${{resource.region}}'

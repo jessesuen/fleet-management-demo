@@ -1,0 +1,3 @@
+cluster: stg.aws.eu.de-frankfurt.003
+cloud: aws
+region: eu-central-1
