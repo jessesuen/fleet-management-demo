@@ -1,0 +1,65 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: cluster-addons
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  # Kargo sets the image as Helm parameters when promoting; don't revert them
+  ignoreApplicationDifferences:
+  - jsonPointers:
+    - /spec/source/helm/parameters
+  generators:
+  - matrix:
+      generators:
+      # Clusters, one inventory file per cluster (named <env>.<geo>.<cloud>.<region>.<3-digit-id>)
+      - git:
+          repoURL: https://github.com/jessesuen/fleet-management-demo.git
+          revision: HEAD
+          files:
+          - path: inventory/clusters/*.yaml
+      # Add-ons installed on every cluster
+      - list:
+          elements:
+          - addon: external-dns
+          - addon: coredns
+          - addon: cert-manager
+          - addon: kyverno
+          - addon: traefik
+  template:
+    metadata:
+      name: '{{ .cluster }}.{{ .addon }}'
+      labels:
+        appset: cluster-addons
+        addon: '{{ .addon }}'
+        env: '{{ index (splitList "." .cluster) 0 }}'
+        geo: '{{ index (splitList "." .cluster) 1 }}'
+        cloud: '{{ index (splitList "." .cluster) 2 }}'
+        region: '{{ index (splitList "." .cluster) 3 }}'
+      annotations:
+        kargo.akuity.io/authorized-stage: 'cluster-addons:{{ index (splitList "." .cluster) 0 }}.{{ index (splitList "." .cluster) 1 }}'
+    spec:
+      project: cluster-addons
+      source:
+        repoURL: https://github.com/jessesuen/fleet-management-demo.git
+        path: charts/cluster-addon
+        targetRevision: HEAD
+        helm:
+          valuesObject:
+            name: '{{ .cluster }}.{{ .addon }}'
+            labels:
+              addon: '{{ .addon }}'
+            config:
+              CLUSTER: '{{ .cluster }}'
+              ADDON: '{{ .addon }}'
+              ENV: '{{ index (splitList "." .cluster) 0 }}'
+              GEO: '{{ index (splitList "." .cluster) 1 }}'
+              CLOUD: '{{ index (splitList "." .cluster) 2 }}'
+              REGION: '{{ index (splitList "." .cluster) 3 }}'
+      destination:
+        name: demo
+        namespace: cluster-addons
+      syncPolicy:
+        syncOptions:
+        - CreateNamespace=true

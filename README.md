@@ -1,0 +1,83 @@
+# Fleet Management Demo
+
+Demonstrates managing a large fleet of clusters with Kargo and Argo CD.
+
+## Layout
+
+| Path | Contents |
+|---|---|
+| `inventory/clusters/` | Cluster inventory, one file per cluster, named `<env>.<geo>.<cloud>.<region>.<3-digit-id>.yaml` |
+| `charts/cluster-addon/` | Lightweight Helm chart (a Deployment with 0 replicas and a ConfigMap) standing in for each add-on |
+| `setup/cluster-addons/argocd/` | Argo CD AppProject and ApplicationSet: one Application per cluster × add-on |
+| `setup/cluster-addons/kargo/` | Kargo Project, Warehouses (one per add-on), TargetSet (one target per cluster), Stages (`<env>.<geo>`) and PromotionTask |
+| `setup/kargo-system/` | Shared Kargo resources (custom promotion steps) |
+
+## Setup
+
+### Prerequisites
+
+- The `argocd` and `kargo` CLIs.
+- An Argo CD instance with a cluster registered under the name `demo`, and a Kargo instance that can manage that Argo CD's Applications.
+
+### Argo CD
+
+```sh
+argocd login <argocd-server>
+
+# AppProject restricting the add-ons to this repo, the demo cluster's cluster-addons namespace,
+# and namespaced resources (plus creating the cluster-addons Namespace itself)
+argocd proj create -f setup/cluster-addons/argocd/00_project.yaml --upsert
+
+# ApplicationSet: one Application per cluster in inventory/clusters/ × add-on
+argocd appset create setup/cluster-addons/argocd/appset.yaml --upsert
+```
+
+Verify that the Applications were generated:
+
+```sh
+argocd app list -l appset=cluster-addons
+```
+
+### Kargo
+
+```sh
+kargo login <kargo-server>
+
+# Shared custom promotion steps
+kargo apply -f setup/kargo-system/
+
+# Cluster add-ons: Project, Warehouses + add-on image ConfigMap, TargetSet, PromotionTask and Stages
+kargo apply -f setup/cluster-addons/kargo/
+```
+
+`kargo apply` creates the Project before the resources inside it, so the whole directory can be applied at once.
+
+Verify:
+
+```sh
+kargo get warehouses --project cluster-addons
+kargo get stages --project cluster-addons
+kargo get freight --project cluster-addons
+```
+
+## Promoting an add-on
+
+Each add-on has its own Warehouse, and every Stage requests Freight from all of them. Stages run `tst.<geo>` → `stg.<geo>` → `prd.<geo>` for each geo (`na`, `latam`, `eu`, `apac`, `cn`, `gov`). Promoting a piece of Freight updates that add-on's Application on every cluster in the Stage.
+
+```sh
+# Promote the latest kyverno Freight to tst.na
+kargo promote --project cluster-addons --warehouse kyverno --stage tst.na
+
+# Then onward to the next Stage
+kargo promote --project cluster-addons --freight-alias <alias> --downstream-from tst.na
+```
+
+## Adding a cluster
+
+Add a file to `inventory/clusters/` and push:
+
+```sh
+echo 'cluster: prd.eu.aws.eu-west-1.005' > inventory/clusters/prd.eu.aws.eu-west-1.005.yaml
+```
+
+The ApplicationSet creates its five add-on Applications, and the TargetSet adds it as a target of the matching `<env>.<geo>` Stage.

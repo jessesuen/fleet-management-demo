@@ -1,0 +1,26 @@
+apiVersion: kargo.akuity.io/v1alpha1
+kind: PromotionTask
+metadata:
+  name: promote
+  namespace: cluster-addons
+spec:
+  vars:
+  # The add-on being promoted is the Warehouse the Freight came from
+  - name: addon
+    value: ${{ ctx.targetFreight.origin.name }}
+  - name: imageRepo
+    value: ${{ configMap("addon-images")[ctx.targetFreight.origin.name] }}
+  steps:
+  - uses: argocd-update
+    config:
+      apps:
+      # The ApplicationSet names each Application <cluster>.<addon>
+      - name: ${{ target.name }}.${{ vars.addon }}
+        sources:
+        - repoURL: https://github.com/jessesuen/fleet-management-demo.git
+          helm:
+            images:
+            - key: image.repository
+              value: ${{ vars.imageRepo }}
+            - key: image.tag
+              value: ${{ imageFrom(vars.imageRepo, warehouse(vars.addon)).Tag }}

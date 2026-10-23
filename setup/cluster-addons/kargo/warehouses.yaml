@@ -1,0 +1,78 @@
+# Image repository of each add-on, read by the promote PromotionTask. Keep in sync with the
+# Warehouse subscriptions below.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: addon-images
+  namespace: cluster-addons
+data:
+  external-dns: registry.k8s.io/external-dns/external-dns
+  coredns: registry.k8s.io/coredns/coredns
+  cert-manager: quay.io/jetstack/cert-manager-controller
+  kyverno: ghcr.io/kyverno/kyverno
+  traefik: docker.io/library/traefik
+
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Warehouse
+metadata:
+  name: external-dns
+  namespace: cluster-addons
+spec:
+  subscriptions:
+  - image:
+      repoURL: registry.k8s.io/external-dns/external-dns
+      imageSelectionStrategy: SemVer
+      discoveryLimit: 10
+
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Warehouse
+metadata:
+  name: coredns
+  namespace: cluster-addons
+spec:
+  subscriptions:
+  - image:
+      repoURL: registry.k8s.io/coredns/coredns
+      imageSelectionStrategy: SemVer
+      discoveryLimit: 10
+
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Warehouse
+metadata:
+  name: cert-manager
+  namespace: cluster-addons
+spec:
+  subscriptions:
+  - image:
+      repoURL: quay.io/jetstack/cert-manager-controller
+      imageSelectionStrategy: SemVer
+      discoveryLimit: 10
+
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Warehouse
+metadata:
+  name: kyverno
+  namespace: cluster-addons
+spec:
+  subscriptions:
+  - image:
+      repoURL: ghcr.io/kyverno/kyverno
+      imageSelectionStrategy: SemVer
+      discoveryLimit: 10
+
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Warehouse
+metadata:
+  name: traefik
+  namespace: cluster-addons
+spec:
+  subscriptions:
+  - image:
+      repoURL: docker.io/library/traefik
+      imageSelectionStrategy: SemVer
+      discoveryLimit: 10

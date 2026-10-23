@@ -1,0 +1,906 @@
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: tst.na
+  namespace: cluster-addons
+  annotations:
+    kargo.akuity.io/color: green
+spec:
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: external-dns
+    sources:
+      direct: true
+  - origin:
+      kind: Warehouse
+      name: coredns
+    sources:
+      direct: true
+  - origin:
+      kind: Warehouse
+      name: cert-manager
+    sources:
+      direct: true
+  - origin:
+      kind: Warehouse
+      name: kyverno
+    sources:
+      direct: true
+  - origin:
+      kind: Warehouse
+      name: traefik
+    sources:
+      direct: true
+  targets:
+    selectors:
+    - matchLabels:
+        env: tst
+        geo: na
+    updateStrategy:
+      maxConcurrent: 5
+  promotionTemplate:
+    spec:
+      steps:
+      - task:
+          name: promote
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: tst.latam
+  namespace: cluster-addons
+  annotations:
+    kargo.akuity.io/color: green
+spec:
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: external-dns
+    sources:
+      direct: true
+  - origin:
+      kind: Warehouse
+      name: coredns
+    sources:
+      direct: true
+  - origin:
+      kind: Warehouse
+      name: cert-manager
+    sources:
+      direct: true
+  - origin:
+      kind: Warehouse
+      name: kyverno
+    sources:
+      direct: true
+  - origin:
+      kind: Warehouse
+      name: traefik
+    sources:
+      direct: true
+  targets:
+    selectors:
+    - matchLabels:
+        env: tst
+        geo: latam
+    updateStrategy:
+      maxConcurrent: 5
+  promotionTemplate:
+    spec:
+      steps:
+      - task:
+          name: promote
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: tst.eu
+  namespace: cluster-addons
+  annotations:
+    kargo.akuity.io/color: green
+spec:
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: external-dns
+    sources:
+      direct: true
+  - origin:
+      kind: Warehouse
+      name: coredns
+    sources:
+      direct: true
+  - origin:
+      kind: Warehouse
+      name: cert-manager
+    sources:
+      direct: true
+  - origin:
+      kind: Warehouse
+      name: kyverno
+    sources:
+      direct: true
+  - origin:
+      kind: Warehouse
+      name: traefik
+    sources:
+      direct: true
+  targets:
+    selectors:
+    - matchLabels:
+        env: tst
+        geo: eu
+    updateStrategy:
+      maxConcurrent: 5
+  promotionTemplate:
+    spec:
+      steps:
+      - task:
+          name: promote
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: tst.apac
+  namespace: cluster-addons
+  annotations:
+    kargo.akuity.io/color: green
+spec:
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: external-dns
+    sources:
+      direct: true
+  - origin:
+      kind: Warehouse
+      name: coredns
+    sources:
+      direct: true
+  - origin:
+      kind: Warehouse
+      name: cert-manager
+    sources:
+      direct: true
+  - origin:
+      kind: Warehouse
+      name: kyverno
+    sources:
+      direct: true
+  - origin:
+      kind: Warehouse
+      name: traefik
+    sources:
+      direct: true
+  targets:
+    selectors:
+    - matchLabels:
+        env: tst
+        geo: apac
+    updateStrategy:
+      maxConcurrent: 5
+  promotionTemplate:
+    spec:
+      steps:
+      - task:
+          name: promote
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: tst.cn
+  namespace: cluster-addons
+  annotations:
+    kargo.akuity.io/color: green
+spec:
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: external-dns
+    sources:
+      direct: true
+  - origin:
+      kind: Warehouse
+      name: coredns
+    sources:
+      direct: true
+  - origin:
+      kind: Warehouse
+      name: cert-manager
+    sources:
+      direct: true
+  - origin:
+      kind: Warehouse
+      name: kyverno
+    sources:
+      direct: true
+  - origin:
+      kind: Warehouse
+      name: traefik
+    sources:
+      direct: true
+  targets:
+    selectors:
+    - matchLabels:
+        env: tst
+        geo: cn
+    updateStrategy:
+      maxConcurrent: 5
+  promotionTemplate:
+    spec:
+      steps:
+      - task:
+          name: promote
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: tst.gov
+  namespace: cluster-addons
+  annotations:
+    kargo.akuity.io/color: green
+spec:
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: external-dns
+    sources:
+      direct: true
+  - origin:
+      kind: Warehouse
+      name: coredns
+    sources:
+      direct: true
+  - origin:
+      kind: Warehouse
+      name: cert-manager
+    sources:
+      direct: true
+  - origin:
+      kind: Warehouse
+      name: kyverno
+    sources:
+      direct: true
+  - origin:
+      kind: Warehouse
+      name: traefik
+    sources:
+      direct: true
+  targets:
+    selectors:
+    - matchLabels:
+        env: tst
+        geo: gov
+    updateStrategy:
+      maxConcurrent: 5
+  promotionTemplate:
+    spec:
+      steps:
+      - task:
+          name: promote
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: stg.na
+  namespace: cluster-addons
+  annotations:
+    kargo.akuity.io/color: yellow
+spec:
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: external-dns
+    sources:
+      stages:
+      - tst.na
+  - origin:
+      kind: Warehouse
+      name: coredns
+    sources:
+      stages:
+      - tst.na
+  - origin:
+      kind: Warehouse
+      name: cert-manager
+    sources:
+      stages:
+      - tst.na
+  - origin:
+      kind: Warehouse
+      name: kyverno
+    sources:
+      stages:
+      - tst.na
+  - origin:
+      kind: Warehouse
+      name: traefik
+    sources:
+      stages:
+      - tst.na
+  targets:
+    selectors:
+    - matchLabels:
+        env: stg
+        geo: na
+    updateStrategy:
+      maxConcurrent: 10
+  promotionTemplate:
+    spec:
+      steps:
+      - task:
+          name: promote
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: stg.latam
+  namespace: cluster-addons
+  annotations:
+    kargo.akuity.io/color: yellow
+spec:
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: external-dns
+    sources:
+      stages:
+      - tst.latam
+  - origin:
+      kind: Warehouse
+      name: coredns
+    sources:
+      stages:
+      - tst.latam
+  - origin:
+      kind: Warehouse
+      name: cert-manager
+    sources:
+      stages:
+      - tst.latam
+  - origin:
+      kind: Warehouse
+      name: kyverno
+    sources:
+      stages:
+      - tst.latam
+  - origin:
+      kind: Warehouse
+      name: traefik
+    sources:
+      stages:
+      - tst.latam
+  targets:
+    selectors:
+    - matchLabels:
+        env: stg
+        geo: latam
+    updateStrategy:
+      maxConcurrent: 10
+  promotionTemplate:
+    spec:
+      steps:
+      - task:
+          name: promote
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: stg.eu
+  namespace: cluster-addons
+  annotations:
+    kargo.akuity.io/color: yellow
+spec:
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: external-dns
+    sources:
+      stages:
+      - tst.eu
+  - origin:
+      kind: Warehouse
+      name: coredns
+    sources:
+      stages:
+      - tst.eu
+  - origin:
+      kind: Warehouse
+      name: cert-manager
+    sources:
+      stages:
+      - tst.eu
+  - origin:
+      kind: Warehouse
+      name: kyverno
+    sources:
+      stages:
+      - tst.eu
+  - origin:
+      kind: Warehouse
+      name: traefik
+    sources:
+      stages:
+      - tst.eu
+  targets:
+    selectors:
+    - matchLabels:
+        env: stg
+        geo: eu
+    updateStrategy:
+      maxConcurrent: 10
+  promotionTemplate:
+    spec:
+      steps:
+      - task:
+          name: promote
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: stg.apac
+  namespace: cluster-addons
+  annotations:
+    kargo.akuity.io/color: yellow
+spec:
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: external-dns
+    sources:
+      stages:
+      - tst.apac
+  - origin:
+      kind: Warehouse
+      name: coredns
+    sources:
+      stages:
+      - tst.apac
+  - origin:
+      kind: Warehouse
+      name: cert-manager
+    sources:
+      stages:
+      - tst.apac
+  - origin:
+      kind: Warehouse
+      name: kyverno
+    sources:
+      stages:
+      - tst.apac
+  - origin:
+      kind: Warehouse
+      name: traefik
+    sources:
+      stages:
+      - tst.apac
+  targets:
+    selectors:
+    - matchLabels:
+        env: stg
+        geo: apac
+    updateStrategy:
+      maxConcurrent: 10
+  promotionTemplate:
+    spec:
+      steps:
+      - task:
+          name: promote
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: stg.cn
+  namespace: cluster-addons
+  annotations:
+    kargo.akuity.io/color: yellow
+spec:
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: external-dns
+    sources:
+      stages:
+      - tst.cn
+  - origin:
+      kind: Warehouse
+      name: coredns
+    sources:
+      stages:
+      - tst.cn
+  - origin:
+      kind: Warehouse
+      name: cert-manager
+    sources:
+      stages:
+      - tst.cn
+  - origin:
+      kind: Warehouse
+      name: kyverno
+    sources:
+      stages:
+      - tst.cn
+  - origin:
+      kind: Warehouse
+      name: traefik
+    sources:
+      stages:
+      - tst.cn
+  targets:
+    selectors:
+    - matchLabels:
+        env: stg
+        geo: cn
+    updateStrategy:
+      maxConcurrent: 10
+  promotionTemplate:
+    spec:
+      steps:
+      - task:
+          name: promote
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: stg.gov
+  namespace: cluster-addons
+  annotations:
+    kargo.akuity.io/color: yellow
+spec:
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: external-dns
+    sources:
+      stages:
+      - tst.gov
+  - origin:
+      kind: Warehouse
+      name: coredns
+    sources:
+      stages:
+      - tst.gov
+  - origin:
+      kind: Warehouse
+      name: cert-manager
+    sources:
+      stages:
+      - tst.gov
+  - origin:
+      kind: Warehouse
+      name: kyverno
+    sources:
+      stages:
+      - tst.gov
+  - origin:
+      kind: Warehouse
+      name: traefik
+    sources:
+      stages:
+      - tst.gov
+  targets:
+    selectors:
+    - matchLabels:
+        env: stg
+        geo: gov
+    updateStrategy:
+      maxConcurrent: 10
+  promotionTemplate:
+    spec:
+      steps:
+      - task:
+          name: promote
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: prd.na
+  namespace: cluster-addons
+  annotations:
+    kargo.akuity.io/color: red
+spec:
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: external-dns
+    sources:
+      stages:
+      - stg.na
+  - origin:
+      kind: Warehouse
+      name: coredns
+    sources:
+      stages:
+      - stg.na
+  - origin:
+      kind: Warehouse
+      name: cert-manager
+    sources:
+      stages:
+      - stg.na
+  - origin:
+      kind: Warehouse
+      name: kyverno
+    sources:
+      stages:
+      - stg.na
+  - origin:
+      kind: Warehouse
+      name: traefik
+    sources:
+      stages:
+      - stg.na
+  targets:
+    selectors:
+    - matchLabels:
+        env: prd
+        geo: na
+    updateStrategy:
+      maxConcurrent: 20
+  promotionTemplate:
+    spec:
+      steps:
+      - task:
+          name: promote
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: prd.latam
+  namespace: cluster-addons
+  annotations:
+    kargo.akuity.io/color: red
+spec:
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: external-dns
+    sources:
+      stages:
+      - stg.latam
+  - origin:
+      kind: Warehouse
+      name: coredns
+    sources:
+      stages:
+      - stg.latam
+  - origin:
+      kind: Warehouse
+      name: cert-manager
+    sources:
+      stages:
+      - stg.latam
+  - origin:
+      kind: Warehouse
+      name: kyverno
+    sources:
+      stages:
+      - stg.latam
+  - origin:
+      kind: Warehouse
+      name: traefik
+    sources:
+      stages:
+      - stg.latam
+  targets:
+    selectors:
+    - matchLabels:
+        env: prd
+        geo: latam
+    updateStrategy:
+      maxConcurrent: 20
+  promotionTemplate:
+    spec:
+      steps:
+      - task:
+          name: promote
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: prd.eu
+  namespace: cluster-addons
+  annotations:
+    kargo.akuity.io/color: red
+spec:
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: external-dns
+    sources:
+      stages:
+      - stg.eu
+  - origin:
+      kind: Warehouse
+      name: coredns
+    sources:
+      stages:
+      - stg.eu
+  - origin:
+      kind: Warehouse
+      name: cert-manager
+    sources:
+      stages:
+      - stg.eu
+  - origin:
+      kind: Warehouse
+      name: kyverno
+    sources:
+      stages:
+      - stg.eu
+  - origin:
+      kind: Warehouse
+      name: traefik
+    sources:
+      stages:
+      - stg.eu
+  targets:
+    selectors:
+    - matchLabels:
+        env: prd
+        geo: eu
+    updateStrategy:
+      maxConcurrent: 20
+  promotionTemplate:
+    spec:
+      steps:
+      - task:
+          name: promote
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: prd.apac
+  namespace: cluster-addons
+  annotations:
+    kargo.akuity.io/color: red
+spec:
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: external-dns
+    sources:
+      stages:
+      - stg.apac
+  - origin:
+      kind: Warehouse
+      name: coredns
+    sources:
+      stages:
+      - stg.apac
+  - origin:
+      kind: Warehouse
+      name: cert-manager
+    sources:
+      stages:
+      - stg.apac
+  - origin:
+      kind: Warehouse
+      name: kyverno
+    sources:
+      stages:
+      - stg.apac
+  - origin:
+      kind: Warehouse
+      name: traefik
+    sources:
+      stages:
+      - stg.apac
+  targets:
+    selectors:
+    - matchLabels:
+        env: prd
+        geo: apac
+    updateStrategy:
+      maxConcurrent: 20
+  promotionTemplate:
+    spec:
+      steps:
+      - task:
+          name: promote
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: prd.cn
+  namespace: cluster-addons
+  annotations:
+    kargo.akuity.io/color: red
+spec:
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: external-dns
+    sources:
+      stages:
+      - stg.cn
+  - origin:
+      kind: Warehouse
+      name: coredns
+    sources:
+      stages:
+      - stg.cn
+  - origin:
+      kind: Warehouse
+      name: cert-manager
+    sources:
+      stages:
+      - stg.cn
+  - origin:
+      kind: Warehouse
+      name: kyverno
+    sources:
+      stages:
+      - stg.cn
+  - origin:
+      kind: Warehouse
+      name: traefik
+    sources:
+      stages:
+      - stg.cn
+  targets:
+    selectors:
+    - matchLabels:
+        env: prd
+        geo: cn
+    updateStrategy:
+      maxConcurrent: 20
+  promotionTemplate:
+    spec:
+      steps:
+      - task:
+          name: promote
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: prd.gov
+  namespace: cluster-addons
+  annotations:
+    kargo.akuity.io/color: red
+spec:
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: external-dns
+    sources:
+      stages:
+      - stg.gov
+  - origin:
+      kind: Warehouse
+      name: coredns
+    sources:
+      stages:
+      - stg.gov
+  - origin:
+      kind: Warehouse
+      name: cert-manager
+    sources:
+      stages:
+      - stg.gov
+  - origin:
+      kind: Warehouse
+      name: kyverno
+    sources:
+      stages:
+      - stg.gov
+  - origin:
+      kind: Warehouse
+      name: traefik
+    sources:
+      stages:
+      - stg.gov
+  targets:
+    selectors:
+    - matchLabels:
+        env: prd
+        geo: gov
+    updateStrategy:
+      maxConcurrent: 20
+  promotionTemplate:
+    spec:
+      steps:
+      - task:
+          name: promote

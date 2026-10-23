@@ -1,18 +1,4 @@
 ---
-apiVersion: ee.kargo.akuity.io/v1alpha1
-kind: CustomPromotionStep
-metadata:
-  name: hello-world
-spec:
-  # Container configuration (required)
-  image: ubuntu
-  ## Using "sh" to demonstrate variable substitution
-  command: ["sh", "-c", "sleep ${{ config.sleep }}; echo hello=${HELLO}-${{ config.world }} > $KARGO_OUTPUT"]   # Required: executable path
-  env:
-    - name: HELLO
-      value: bonjour
-
----
 apiVersion: kargo.akuity.io/v1alpha1
 kind: PromotionTask
 metadata:
