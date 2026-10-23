@@ -11,6 +11,7 @@ data:
   cert-manager: quay.io/jetstack/cert-manager-controller
   kyverno: ghcr.io/kyverno/kyverno
   traefik: docker.io/library/traefik
+  prometheus: quay.io/prometheus/prometheus
 
 ---
 apiVersion: kargo.akuity.io/v1alpha1
@@ -74,5 +75,18 @@ spec:
   subscriptions:
   - image:
       repoURL: docker.io/library/traefik
+      imageSelectionStrategy: SemVer
+      discoveryLimit: 10
+
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Warehouse
+metadata:
+  name: prometheus
+  namespace: cluster-addons
+spec:
+  subscriptions:
+  - image:
+      repoURL: quay.io/prometheus/prometheus
       imageSelectionStrategy: SemVer
       discoveryLimit: 10

@@ -9,7 +9,7 @@ Demonstrates managing a large fleet of clusters with Kargo and Argo CD.
 | `inventory/clusters/` | Cluster inventory, one file per cluster, named `<env>.<geo>.<cloud>.<region>.<3-digit-id>.yaml` |
 | `charts/<addon>/` | A dummy Helm chart per add-on. Each directory here becomes an add-on on every cluster |
 | `setup/cluster-addons/argocd/` | Argo CD AppProject and ApplicationSet: one Application per cluster × add-on |
-| `setup/cluster-addons/kargo/` | Kargo Project, Warehouses (one per add-on), TargetSet (one target per cluster), Stages (`<env>.<geo>`) and PromotionTask |
+| `setup/cluster-addons/kargo/` | Kargo Project, Warehouses (one per add-on), TargetSet (one target per cluster), Stages (`test`, then `<env>.<geo>`) and PromotionTask |
 | `setup/kargo-system/` | Shared Kargo resources (custom promotion steps) |
 
 ## Setup
@@ -62,14 +62,14 @@ kargo get freight --project cluster-addons
 
 ## Promoting an add-on
 
-Each add-on has its own Warehouse, and every Stage requests Freight from all of them. Stages run `tst.<geo>` → `stg.<geo>` → `prd.<geo>` for each geo (`na`, `latam`, `eu`, `apac`, `cn`, `gov`). Promoting a piece of Freight updates that add-on's Application on every cluster in the Stage.
+Each add-on has its own Warehouse, and every Stage requests Freight from all of them. Freight goes to a single `test` Stage (every `tst` cluster), then fans out to `stg.<geo>` → `prd.<geo>` for each geo (`na`, `latam`, `eu`, `apac`, `gov`). Promoting a piece of Freight updates that add-on's Application on every cluster in the Stage.
 
 ```sh
-# Promote the latest kyverno Freight to tst.na
-kargo promote --project cluster-addons --warehouse kyverno --stage tst.na
+# Promote the latest kyverno Freight to test
+kargo promote --project cluster-addons --warehouse kyverno --stage test
 
-# Then onward to the next Stage
-kargo promote --project cluster-addons --freight-alias <alias> --downstream-from tst.na
+# Then onward to every stg.<geo> Stage
+kargo promote --project cluster-addons --freight-alias <alias> --downstream-from test
 ```
 
 ## Adding a cluster
@@ -77,7 +77,7 @@ kargo promote --project cluster-addons --freight-alias <alias> --downstream-from
 Add a file to `inventory/clusters/` and push:
 
 ```sh
-echo 'cluster: prd.eu.aws.eu-west-1.005' > inventory/clusters/prd.eu.aws.eu-west-1.005.yaml
+echo 'cluster: prd.eu.aws.eu-west-1.013' > inventory/clusters/prd.eu.aws.eu-west-1.013.yaml
 ```
 
 The ApplicationSet creates an Application for each add-on in `charts/`, and the TargetSet adds it as a target of the matching `<env>.<geo>` Stage.
@@ -119,10 +119,10 @@ An add-on is a chart in `charts/` plus a Warehouse in Kargo, both named after th
      argo-rollouts: quay.io/argoproj/argo-rollouts
    ```
 
-4. **Request its Freight in every Stage** in `setup/cluster-addons/kargo/stages.yaml`. Each Stage lists every add-on's Warehouse under `requestedFreight`. `tst.<geo>` Stages take Freight directly from the Warehouse, and the others take it from the previous Stage in the same geo:
+4. **Request its Freight in every Stage** in `setup/cluster-addons/kargo/stages.yaml`. Each Stage lists every add-on's Warehouse under `requestedFreight`. The `test` Stage takes Freight directly from the Warehouse, `stg.<geo>` Stages take it from `test`, and `prd.<geo>` Stages from `stg.<geo>`:
 
    ```yaml
-   # tst.<geo>
+   # test
    - origin:
        kind: Warehouse
        name: argo-rollouts
@@ -134,7 +134,7 @@ An add-on is a chart in `charts/` plus a Warehouse in Kargo, both named after th
        name: argo-rollouts
      sources:
        stages:
-       - tst.<geo>   # or stg.<geo> for prd.<geo>
+       - test   # or stg.<geo> for prd.<geo>
    ```
 
 5. **Apply and push:**
@@ -147,7 +147,7 @@ An add-on is a chart in `charts/` plus a Warehouse in Kargo, both named after th
 Then promote it like any other add-on:
 
 ```sh
-kargo promote --project cluster-addons --warehouse argo-rollouts --stage tst.na
+kargo promote --project cluster-addons --warehouse argo-rollouts --stage test
 ```
 
 If the chart is pushed without steps 2–4, Argo CD still deploys the add-on to every cluster, but Kargo has no Freight for it and can never promote it.

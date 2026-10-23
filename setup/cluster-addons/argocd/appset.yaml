@@ -38,7 +38,8 @@ spec:
         cloud: '{{ index (splitList "." .cluster) 2 }}'
         region: '{{ index (splitList "." .cluster) 3 }}'
       annotations:
-        kargo.akuity.io/authorized-stage: 'cluster-addons:{{ index (splitList "." .cluster) 0 }}.{{ index (splitList "." .cluster) 1 }}'
+        # tst clusters all belong to the single test Stage; the others to <env>.<geo>
+        kargo.akuity.io/authorized-stage: 'cluster-addons:{{ if hasPrefix "tst." .cluster }}test{{ else }}{{ index (splitList "." .cluster) 0 }}.{{ index (splitList "." .cluster) 1 }}{{ end }}'
     spec:
       project: cluster-addons
       source:
