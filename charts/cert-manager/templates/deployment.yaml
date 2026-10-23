@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "cluster-addon.name" . }}
+  name: {{ include "addon.name" . }}
   labels:
-    {{- include "cluster-addon.labels" . | nindent 4 }}
+    {{- include "addon.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicas }}
   selector:
     matchLabels:
-      {{- include "cluster-addon.selectorLabels" . | nindent 6 }}
+      {{- include "addon.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "cluster-addon.labels" . | nindent 8 }}
+        {{- include "addon.labels" . | nindent 8 }}
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
     spec:
@@ -21,4 +21,4 @@ spec:
         image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
         envFrom:
         - configMapRef:
-            name: {{ include "cluster-addon.name" . }}
+            name: {{ include "addon.name" . }}

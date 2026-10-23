@@ -1,0 +1,15 @@
+# Name of the Deployment and ConfigMap. Many instances may share a namespace, so set this
+# per instance. Defaults to the release name.
+name: ""
+
+replicas: 0
+
+image:
+  repository: registry.k8s.io/pause
+  tag: "3.10"
+
+# Extra labels added to all resources.
+labels: {}
+
+# Data of the ConfigMap. Exposed to the container as environment variables.
+config: {}

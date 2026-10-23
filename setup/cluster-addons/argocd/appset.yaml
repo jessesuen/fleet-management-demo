@@ -19,20 +19,20 @@ spec:
           revision: HEAD
           files:
           - path: inventory/clusters/*.yaml
-      # Add-ons installed on every cluster
-      - list:
-          elements:
-          - addon: external-dns
-          - addon: coredns
-          - addon: cert-manager
-          - addon: kyverno
-          - addon: traefik
+      # Add-ons, one chart per add-on under charts/. Prefixed so its path params (.chart.path.*)
+      # don't collide with the inventory generator's.
+      - git:
+          repoURL: https://github.com/jessesuen/fleet-management-demo.git
+          revision: HEAD
+          pathParamPrefix: chart
+          directories:
+          - path: charts/*
   template:
     metadata:
-      name: '{{ .cluster }}.{{ .addon }}'
+      name: '{{ .cluster }}.{{ .chart.path.basename }}'
       labels:
         appset: cluster-addons
-        addon: '{{ .addon }}'
+        addon: '{{ .chart.path.basename }}'
         env: '{{ index (splitList "." .cluster) 0 }}'
         geo: '{{ index (splitList "." .cluster) 1 }}'
         cloud: '{{ index (splitList "." .cluster) 2 }}'
@@ -43,16 +43,16 @@ spec:
       project: cluster-addons
       source:
         repoURL: https://github.com/jessesuen/fleet-management-demo.git
-        path: charts/cluster-addon
+        path: '{{ .chart.path.path }}'
         targetRevision: HEAD
         helm:
           valuesObject:
-            name: '{{ .cluster }}.{{ .addon }}'
+            name: '{{ .cluster }}.{{ .chart.path.basename }}'
             labels:
-              addon: '{{ .addon }}'
+              addon: '{{ .chart.path.basename }}'
             config:
               CLUSTER: '{{ .cluster }}'
-              ADDON: '{{ .addon }}'
+              ADDON: '{{ .chart.path.basename }}'
               ENV: '{{ index (splitList "." .cluster) 0 }}'
               GEO: '{{ index (splitList "." .cluster) 1 }}'
               CLOUD: '{{ index (splitList "." .cluster) 2 }}'

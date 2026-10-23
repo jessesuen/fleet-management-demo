@@ -7,7 +7,7 @@ Demonstrates managing a large fleet of clusters with Kargo and Argo CD.
 | Path | Contents |
 |---|---|
 | `inventory/clusters/` | Cluster inventory, one file per cluster, named `<env>.<geo>.<cloud>.<region>.<3-digit-id>.yaml` |
-| `charts/cluster-addon/` | Lightweight Helm chart (a Deployment with 0 replicas and a ConfigMap) standing in for each add-on |
+| `charts/<addon>/` | A dummy Helm chart per add-on. Each directory here becomes an add-on on every cluster |
 | `setup/cluster-addons/argocd/` | Argo CD AppProject and ApplicationSet: one Application per cluster × add-on |
 | `setup/cluster-addons/kargo/` | Kargo Project, Warehouses (one per add-on), TargetSet (one target per cluster), Stages (`<env>.<geo>`) and PromotionTask |
 | `setup/kargo-system/` | Shared Kargo resources (custom promotion steps) |
@@ -28,7 +28,7 @@ argocd login <argocd-server>
 # and namespaced resources (plus creating the cluster-addons Namespace itself)
 argocd proj create -f setup/cluster-addons/argocd/00_project.yaml --upsert
 
-# ApplicationSet: one Application per cluster in inventory/clusters/ × add-on
+# ApplicationSet: one Application per cluster in inventory/clusters/ × chart in charts/
 argocd appset create setup/cluster-addons/argocd/appset.yaml --upsert
 ```
 
@@ -80,4 +80,74 @@ Add a file to `inventory/clusters/` and push:
 echo 'cluster: prd.eu.aws.eu-west-1.005' > inventory/clusters/prd.eu.aws.eu-west-1.005.yaml
 ```
 
-The ApplicationSet creates its five add-on Applications, and the TargetSet adds it as a target of the matching `<env>.<geo>` Stage.
+The ApplicationSet creates an Application for each add-on in `charts/`, and the TargetSet adds it as a target of the matching `<env>.<geo>` Stage.
+
+## Adding an add-on
+
+An add-on is a chart in `charts/` plus a Warehouse in Kargo, both named after the add-on. The name must be the same everywhere, because Kargo uses the Warehouse name to find the add-on's Applications (`<cluster>.<addon>`) and its image. For example, to add `argo-rollouts`:
+
+1. **Add a chart.** Copy an existing add-on chart and rename it:
+
+   ```sh
+   cp -R charts/kyverno charts/argo-rollouts
+   sed -i '' 's/^name: kyverno$/name: argo-rollouts/' charts/argo-rollouts/Chart.yaml
+   ```
+
+   The ApplicationSet picks up every directory under `charts/`, so once pushed, Argo CD creates an `<cluster>.argo-rollouts` Application on every cluster. Until the first promotion, it runs the chart's default image.
+
+2. **Add a Warehouse** subscribed to the add-on's image in `setup/cluster-addons/kargo/warehouses.yaml`:
+
+   ```yaml
+   ---
+   apiVersion: kargo.akuity.io/v1alpha1
+   kind: Warehouse
+   metadata:
+     name: argo-rollouts
+     namespace: cluster-addons
+   spec:
+     subscriptions:
+     - image:
+         repoURL: quay.io/argoproj/argo-rollouts
+         imageSelectionStrategy: SemVer
+         discoveryLimit: 10
+   ```
+
+3. **Add the image to the `addon-images` ConfigMap** at the top of the same file, using the same repo URL as the Warehouse. The PromotionTask reads it to set the image on the Application:
+
+   ```yaml
+   data:
+     argo-rollouts: quay.io/argoproj/argo-rollouts
+   ```
+
+4. **Request its Freight in every Stage** in `setup/cluster-addons/kargo/stages.yaml`. Each Stage lists every add-on's Warehouse under `requestedFreight`. `tst.<geo>` Stages take Freight directly from the Warehouse, and the others take it from the previous Stage in the same geo:
+
+   ```yaml
+   # tst.<geo>
+   - origin:
+       kind: Warehouse
+       name: argo-rollouts
+     sources:
+       direct: true
+   # stg.<geo> and prd.<geo>
+   - origin:
+       kind: Warehouse
+       name: argo-rollouts
+     sources:
+       stages:
+       - tst.<geo>   # or stg.<geo> for prd.<geo>
+   ```
+
+5. **Apply and push:**
+
+   ```sh
+   kargo apply -f setup/cluster-addons/kargo/
+   git add charts/argo-rollouts && git commit -m "Add argo-rollouts add-on" && git push
+   ```
+
+Then promote it like any other add-on:
+
+```sh
+kargo promote --project cluster-addons --warehouse argo-rollouts --stage tst.na
+```
+
+If the chart is pushed without steps 2–4, Argo CD still deploys the add-on to every cluster, but Kargo has no Freight for it and can never promote it.

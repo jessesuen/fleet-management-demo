@@ -1,0 +1,6 @@
+apiVersion: v2
+name: coredns
+description: Lightweight placeholder for the coredns cluster add-on (a Deployment and a ConfigMap)
+type: application
+version: 0.1.0
+appVersion: "1.0.0"

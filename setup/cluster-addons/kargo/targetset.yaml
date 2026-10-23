@@ -19,3 +19,10 @@ spec:
         geo: '${{split(resource.cluster, ".")[1]}}'
         cloud: '${{split(resource.cluster, ".")[2]}}'
         region: '${{split(resource.cluster, ".")[3]}}'
+    spec:
+      params:
+        cluster: '${{resource.cluster}}'
+        env: '${{split(resource.cluster, ".")[0]}}'
+        geo: '${{split(resource.cluster, ".")[1]}}'
+        cloud: '${{split(resource.cluster, ".")[2]}}'
+        region: '${{split(resource.cluster, ".")[3]}}'
