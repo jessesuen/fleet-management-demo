@@ -1,3 +1,4 @@
 cluster: tst.gcp.eu.de-frankfurt.001
 cloud: gcp
 region: europe-west3
+fail: "true"

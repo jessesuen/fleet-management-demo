@@ -76,6 +76,27 @@ kargo promote --project cluster-addons --freight-alias <alias> --stage prod
 kargo promote --project cluster-addons --freight-alias <alias> --downstream-from prod
 ```
 
+## Simulated failures
+
+A few clusters have `fail: "true"` in their inventory file. The TargetSet passes it to each target as the `fail` param, and the `promote` PromotionTask runs a `fail` step first on those targets, so promoting to them always fails.
+
+Each Stage tolerates some failed targets: `maxFailures: "5%"` of the clusters it selects, rounded up. The failing clusters are spread so every Stage stays under that limit, so its promotion still succeeds and Freight moves on:
+
+| Stage | Clusters | Failing | Tolerated |
+|---|---|---|---|
+| `test` | 24 | 1 | 2 |
+| `prd.na` | 112 | 4 | 6 |
+| `prd.eu` | 80 | 2 | 4 |
+| `prd.apac` | 64 | 2 | 4 |
+| `prd.latam` | 40 | 1 | 2 |
+| `prd.gov` | 24 | 1 | 2 |
+
+To see a promotion fail instead, add `fail: "true"` to more clusters in a Stage than it tolerates (e.g. 3 `tst` clusters), or lower its `maxFailures`. To list the failing clusters:
+
+```sh
+grep -l 'fail: "true"' inventory/clusters/*
+```
+
 ## Adding a cluster
 
 Add a file to `inventory/clusters/` and push. The name is `<env>.<cloud>.<geo>.<metro>.<3-digit-id>`, where the metro is `<country>-<city>` of the provider region (e.g. AWS `eu-west-1`, Azure `northeurope` → `ie-dublin`). The 3-digit ID counts clusters per env, cloud, geo and metro, since one cloud can have several regions in a metro:

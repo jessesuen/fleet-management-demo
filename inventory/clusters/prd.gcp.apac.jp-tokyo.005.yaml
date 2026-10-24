@@ -1,3 +1,4 @@
 cluster: prd.gcp.apac.jp-tokyo.005
 cloud: gcp
 region: asia-northeast1
+fail: "true"

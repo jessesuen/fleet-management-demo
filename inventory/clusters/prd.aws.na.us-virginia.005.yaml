@@ -1,3 +1,4 @@
 cluster: prd.aws.na.us-virginia.005
 cloud: aws
 region: us-east-1
+fail: "true"

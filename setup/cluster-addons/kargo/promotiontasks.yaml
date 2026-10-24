@@ -11,6 +11,12 @@ spec:
   - name: imageRepo
     value: ${{ configMap("addon-images")[ctx.targetFreight.origin.name] }}
   steps:
+  # Simulated failure, for clusters with fail: "true" in their inventory file. Each Stage tolerates
+  # some failed targets (maxFailures), so the promotion as a whole still succeeds.
+  - uses: fail
+    if: ${{ string(target.params.fail) == "true" }}
+    config:
+      message: Simulated failure on ${{ target.name }} (fail is "true" in its inventory file)
   - uses: argocd-update
     config:
       apps:

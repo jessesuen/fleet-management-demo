@@ -1,3 +1,4 @@
 cluster: prd.aws.gov.us-ohio.006
 cloud: aws
 region: us-gov-east-1
+fail: "true"

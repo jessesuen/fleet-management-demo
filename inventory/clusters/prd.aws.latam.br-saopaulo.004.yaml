@@ -1,3 +1,4 @@
 cluster: prd.aws.latam.br-saopaulo.004
 cloud: aws
 region: sa-east-1
+fail: "true"

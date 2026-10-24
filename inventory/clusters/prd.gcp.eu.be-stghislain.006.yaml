@@ -1,3 +1,4 @@
 cluster: prd.gcp.eu.be-stghislain.006
 cloud: gcp
 region: europe-west1
+fail: "true"

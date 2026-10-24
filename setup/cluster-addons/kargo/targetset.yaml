@@ -32,3 +32,5 @@ spec:
         country: '${{split(split(resource.cluster, ".")[3], "-")[0]}}'
         cloud: '${{resource.cloud}}'
         region: '${{resource.region}}'
+        # "true" to simulate a failed promotion on this cluster. Only set in a few inventory files.
+        fail: '${{get(resource, "fail") ?? "false"}}'
