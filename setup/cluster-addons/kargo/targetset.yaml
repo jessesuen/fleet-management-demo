@@ -22,7 +22,6 @@ spec:
         metro: '${{split(resource.cluster, ".")[3]}}'
         country: '${{split(split(resource.cluster, ".")[3], "-")[0]}}'
         cloud: '${{resource.cloud}}'
-        region: '${{resource.region}}'
     spec:
       params:
         cluster: '${{resource.cluster}}'
