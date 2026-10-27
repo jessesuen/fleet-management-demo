@@ -80,7 +80,7 @@ kargo promote --project cluster-addons --freight-alias <alias> --downstream-from
 
 A few clusters have `fail: "true"` in their inventory file. The TargetSet passes it to each target as the `fail` param, and the `promote` PromotionTask runs a `fail` step first on those targets, so promoting to them always fails.
 
-Each Stage tolerates some failed targets: `maxFailures: "5%"` of the clusters it selects, rounded up. The failing clusters are spread so every Stage stays under that limit, so its promotion still succeeds and Freight moves on:
+Each Stage tolerates some failed targets: `maxFailures: "5%"` of the clusters it selects, rounded up. The failing clusters are spread so every Stage but `prd.latam` stays under that limit, so its promotion still succeeds and Freight moves on. `prd.latam` goes over it on purpose, to show a rollout failing fast:
 
 | Stage | Clusters | Failing | Tolerated |
 |---|---|---|---|
@@ -88,10 +88,12 @@ Each Stage tolerates some failed targets: `maxFailures: "5%"` of the clusters it
 | `prd.na` | 112 | 4 | 6 |
 | `prd.eu` | 80 | 2 | 4 |
 | `prd.apac` | 64 | 2 | 4 |
-| `prd.latam` | 40 | 1 | 2 |
+| `prd.latam` | 40 | 3 | 2 |
 | `prd.gov` | 24 | 1 | 2 |
 
-To see a promotion fail instead, add `fail: "true"` to more clusters in a Stage than it tolerates (e.g. 3 `tst` clusters), or lower its `maxFailures`. To list the failing clusters:
+Targets are promoted in name order, so a rollout's progress is predictable. `prd.latam` uses `maxConcurrent: 5`, so it starts with its first 5 targets (`prd.aws.latam.br-saopaulo.001`–`.005`), which succeed. As slots free up, the next targets in name order start: `.006`, `.007` and `.008`, which all fail. The third failure goes over the budget, so the rollout fails and starts no more targets. The other 32 clusters stay on the old Freight.
+
+To see another promotion fail, add `fail: "true"` to more clusters in a Stage than it tolerates (e.g. 3 `tst` clusters), or lower its `maxFailures`. To list the failing clusters:
 
 ```sh
 grep -l 'fail: "true"' inventory/clusters/*
